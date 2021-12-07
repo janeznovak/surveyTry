@@ -3,6 +3,7 @@
     <!-- If you want to hide survey, comment the lines below -->
     <h2>SurveyJS Library - a sample survey below</h2>
     <survey :survey="survey"></survey>
+    <h2>Something</h2>
   </div>
 </template>
 
@@ -30,6 +31,10 @@ widgets.bootstrapslider(SurveyVue);
 customWidget(SurveyVue);
 
 SurveyVue.Serializer.addProperty("question", "tag:number");
+// Survey
+//     .StylesManager
+//     .applyTheme("modern"); returns an error
+
 
 export default {
   components: {
@@ -37,147 +42,92 @@ export default {
   },
   data() {
     var json = {
-      title: "Product Feedback Survey Example",
-      showProgressBar: "top",
-      pages: [
+    showQuestionNumbers: "off",
+    questions: [
         {
-          questions: [
-            {
-              name: "date",
-              type: "datepicker",
-              inputType: "date",
-              title: "Your favorite date:",
-              dateFormat: "mm/dd/yy",
-              isRequired: true
-            },
-            {
-              type: "matrix",
-              name: "Quality",
-              title:
-                "Please indicate if you agree or disagree with the following statements",
-              columns: [
-                {
-                  value: 1,
-                  text: "Strongly Disagree"
-                },
-                {
-                  value: 2,
-                  text: "Disagree"
-                },
-                {
-                  value: 3,
-                  text: "Neutral"
-                },
-                {
-                  value: 4,
-                  text: "Agree"
-                },
-                {
-                  value: 5,
-                  text: "Strongly Agree"
-                }
-              ],
-              rows: [
-                {
-                  value: "affordable",
-                  text: "Product is affordable"
-                },
-                {
-                  value: "does what it claims",
-                  text: "Product does what it claims"
-                },
-                {
-                  value: "better then others",
-                  text: "Product is better than other products on the market"
-                },
-                {
-                  value: "easy to use",
-                  text: "Product is easy to use"
-                }
-              ]
-            },
-            {
-              type: "rating",
-              name: "satisfaction",
-              title: "How satisfied are you with the Product?",
-              mininumRateDescription: "Not Satisfied",
-              maximumRateDescription: "Completely satisfied"
-            },
-            {
-              type: "rating",
-              name: "recommend friends",
-              visibleIf: "{satisfaction} > 3",
-              title:
-                "How likely are you to recommend the Product to a friend or co-worker?",
-              mininumRateDescription: "Will not recommend",
-              maximumRateDescription: "I will recommend"
-            },
-            {
-              type: "comment",
-              name: "suggestions",
-              title: "What would make you more satisfied with the Product?"
-            }
-          ]
-        },
-        {
-          questions: [
-            {
-              type: "radiogroup",
-              name: "price to competitors",
-              title: "Compared to our competitors, do you feel the Product is",
-              choices: [
-                "Less expensive",
-                "Priced about the same",
-                "More expensive",
-                "Not sure"
-              ]
-            },
-            {
-              type: "radiogroup",
-              name: "price",
-              title: "Do you feel our current price is merited by our product?",
-              choices: [
-                "correct|Yes, the price is about right",
-                "low|No, the price is too low for your product",
-                "high|No, the price is too high for your product"
-              ]
-            },
-            {
-              type: "multipletext",
-              name: "pricelimit",
-              title: "What is the... ",
-              items: [
-                {
-                  name: "mostamount",
-                  title:
-                    "Most amount you would every pay for a product like ours"
-                },
-                {
-                  name: "leastamount",
-                  title: "The least amount you would feel comfortable paying"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          questions: [
-            {
-              type: "text",
-              name: "email",
-              title:
-                'Thank you for taking our survey. Please enter your email address, then press the "Submit" button.'
-            }
-          ]
+            type: "radiogroup",
+            name: "haveKids",
+            title: "Do you have a kid(s)?",
+            isRequired: true,
+            choices: [
+                "Yes", "No"
+            ],
+            colCount: 0
+        }, {
+            type: "dropdown",
+            name: "kids",
+            title: "How many kids do you have",
+            visibleIf: "{haveKids}='Yes'",
+            isRequired: true,
+            choices: [1, 2, 3, 4, 5]
+        }, {
+            type: "dropdown",
+            name: "kid1Age",
+            title: "The first kid age:",
+            visibleIf: "{haveKids}='Yes' and {kids} >= 1",
+            isRequired: true,
+            "choicesMax": 18
+        }, {
+            type: "dropdown",
+            name: "kid2Age",
+            title: "The second kid age:",
+            visibleIf: "{haveKids}='Yes' and {kids} >= 2",
+            isRequired: true,
+            startWithNewLine: false,
+            "choicesMax": 18
+        }, {
+            type: "dropdown",
+            name: "kid3Age",
+            title: "The third kid age:",
+            visibleIf: "{haveKids}='Yes' and {kids} >= 3",
+            isRequired: true,
+            startWithNewLine: false,
+            "choicesMax": 18
+        }, {
+            type: "dropdown",
+            name: "kid4Age",
+            title: "The fourth kid age:",
+            visibleIf: "{haveKids}='Yes' and {kids} >= 4",
+            isRequired: true,
+            startWithNewLine: false,
+            "choicesMax": 18
+        }, {
+            type: "dropdown",
+            name: "kid5Age",
+            title: "The fifth kid age:",
+            visibleIf: "{haveKids}='Yes' and {kids} >= 5",
+            isRequired: true,
+            startWithNewLine: false,
+            "choicesMax": 18
         }
-      ]
+    ]
     };
     var model = new SurveyVue.Model(json);
+
+    // for doing something, when the survey is completed, eg. logging the object and data of survey. You could do something like sending the survey to the
+    // server and then do something with it(eg. putting it in the db).
+    model.onComplete.add((sender) => {
+      var object = sender;
+      var data = sender.data;
+      console.log(object, data.haveKids);
+    })
     return {
       survey: model
     };
-  }
+  },
 };
+
+// this.survey.oncomplete.add(function() {
+//   // var something = sender;
+//   // var sad = sender.data;
+//   // console.log(something, sad);
+// })
+// this.survey.oncomplete.add(function(sender) {
+//   var something = sender;
+//   var data = sender.data;
+//   console.log(something, data);
+// })
+
 </script>
 
 <style>
